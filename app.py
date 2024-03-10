@@ -574,6 +574,11 @@ def clean_text(text):
     # Remove punctuation except periods
     text = ''.join([char for char in text if char not in string.punctuation or char == '.' or char == '"' or char == "'"])
     # Convert text to lowercase
+    text = text.lower()
+    # Remove extra whitespace
+    text = ' '.join(text.split())
+    return text
+
    
     # Remove extra whitespace
     text = ' '.join(text.split())
