@@ -546,6 +546,7 @@ def perform_ner(text):
     # Remove duplicate entities
     unique_entities = list(set(entities))
     return unique_entities
+   
 
 # def perform_ner(text):
 #     doc = nlp(text)
@@ -717,7 +718,8 @@ def analyze_data():
         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cleaned_text)
 
         # TextBlob sentiment analysis
-        textblob_sentiment_plot = generate_sentiment_plot(blob, 'TextBlob Sentiment Analysis')
+        textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
+
 
         # Polarity distribution plot
         polarity_plot = generate_polarity_plot(cleaned_text)
