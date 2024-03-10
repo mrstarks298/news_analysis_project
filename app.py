@@ -143,7 +143,8 @@ def clean_text(text):
     # Remove extra whitespace
     text = ' '.join(text.split())
     return text
-
+    #maine sentence ko pehle bula lia kyoki chatgpt bol rha tha
+sentences = nltk.sent_tokenize(text)
 # Function to generate sentiment plot
 def generate_sentiment_plot(sentences, title):
     polarity_scores = [TextBlob(s).sentiment.polarity for s in sentences]
