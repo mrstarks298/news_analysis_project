@@ -710,7 +710,9 @@ def analyze_data():
         # Count number of sentences without removing periods
         num_sentences = len(nltk.sent_tokenize(text))
 
-        # Sentiment analysis using TextBlob
+        # Assuming cleaned_text is being used here
+        if not isinstance(cleaned_text, str):
+           cleaned_text = str(cleaned_text)
         blob = TextBlob(cleaned_text)
         sentiment_score = blob.sentiment.polarity
 
