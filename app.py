@@ -17,7 +17,16 @@ from collections import Counter
 import json
 
 # Load English language model for spaCy
-nlp = spacy.load('en_core_web_sm')
+nlp = nltk.download('maxent_ne_chunker')
+
+
+#nltk.download('words')
+
+def perform_ner(text):
+    words = nltk.word_tokenize(text)
+    pos_tags = nltk.pos_tag(words)
+    return nltk.ne_chunk(pos_tags)
+
 
 # Initialize Flask app
 app = Flask(__name__)
