@@ -46,8 +46,8 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 # Database configuration
-DB_HOST = '
-dpg-cn0akhmd3nmc738a4mcg-a'
+DB_HOST = 'dpg-cn0akhmd3nmc738a4mcg-a'
+
 DB_NAME = 'sitare_hiring_data'
 DB_USER = 's'
 DB_PASSWORD = 'm5eAZw9B93e3yI3zq8VVFBDpLzyKNmQf'
