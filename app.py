@@ -15,6 +15,10 @@ import spacy
 import psycopg2
 from collections import Counter
 import json
+nltk.download('averaged_perceptron_tagger')
+nltk.download("stopwords")
+nltk.download("punkt")
+nltk.download('universal_tagset')
 # Define the SQL statement to create the new_table
 create_table_query = """
 CREATE TABLE IF NOT EXISTS new_table (
