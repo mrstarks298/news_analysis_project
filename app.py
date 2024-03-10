@@ -15,6 +15,29 @@ import spacy
 import psycopg2
 from collections import Counter
 import json
+# Define the SQL statement to create the new_table
+create_table_query = """
+CREATE TABLE IF NOT EXISTS new_table (
+    id SERIAL PRIMARY KEY,
+    url TEXT,
+    paragraph TEXT,
+    num_words INTEGER,
+    num_sentences INTEGER,
+    sentiment_score FLOAT,
+    pos_tags JSON
+);
+"""
+
+# Load English language model for spaCy
+nlp = nltk.download('maxent_ne_chunker')
+
+# Function to establish database connection and create the table if it doesn't exist
+def connect_to_db():
+    conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
+    cur = conn.cursor()
+    cur.execute(create_table_query)  # Create the table if it doesn't exist
+    conn.commit()
+    return conn
 
 # Load English language model for spaCy
 nlp = nltk.download('maxent_ne_chunker')
@@ -64,6 +87,9 @@ DB_PASSWORD = 'm5eAZw9B93e3yI3zq8VVFBDpLzyKNmQf'
 # Function to establish database connection
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
+    cur = conn.cursor()
+    cur.execute(create_table_query)  # Create the table if it doesn't exist
+    conn.commit()
     return conn
 
 # Function to check if admin is logged in
