@@ -46,10 +46,11 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 # Database configuration
-DB_HOST = 'localhost'
-DB_NAME = 'postgres'
-DB_USER = 'postgres'
-DB_PASSWORD = 'Saurabh_Agrahari'
+DB_HOST = '
+dpg-cn0akhmd3nmc738a4mcg-a'
+DB_NAME = 'sitare_hiring_data'
+DB_USER = 's'
+DB_PASSWORD = 'm5eAZw9B93e3yI3zq8VVFBDpLzyKNmQf'
 
 # Function to establish database connection
 def connect_to_db():
