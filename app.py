@@ -475,8 +475,7 @@ nltk.download  ('averaged_perceptron_tagger')
 nltk.download("stopwords")
 nltk.download("punkt")
 nltk.download('universal_tagset')
-create_table_query = 
-CREATE TABLE IF NOT EXISTS new_table (
+create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
     url TEXT,
     paragraph TEXT,
@@ -484,7 +483,7 @@ CREATE TABLE IF NOT EXISTS new_table (
     num_sentences INTEGER,
     sentiment_score FLOAT,
     pos_tags JSON
-);
+);'''
 nlp = nltk.download('maxent_ne_chunker')
 # Database configuration
 DB_HOST = 'dpg-cn0akhmd3nmc738a4mcg-a'
