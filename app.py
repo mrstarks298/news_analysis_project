@@ -323,7 +323,7 @@ def analyze_data():
 
         # Replace placeholders with actual variables containing data
         cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score,pos_tags) VALUES (%s, %s, %s, %s, %s,%s)",
-                    (url, text, num_words, num_sentences, sentiment_score,json.dumps(pos_counts)))
+                    (url, str(text), num_words, num_sentences, sentiment_score,json.dumps(pos_counts)))
 
         # Commit the transaction
         conn.commit()
