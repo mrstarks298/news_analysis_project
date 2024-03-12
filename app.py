@@ -214,6 +214,7 @@ def index():
 # Route to handle form submission and display analysis results
 @app.route('/analyze', methods=['POST'])
 def analyze_data():
+    url=''
     try:
     
         # Get user input from form
