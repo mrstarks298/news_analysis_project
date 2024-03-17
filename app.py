@@ -30,7 +30,7 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
 );'''
 nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
-nlp = spacy.load('en_core_web_sm')
+
 
 # Database configuration
 DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
