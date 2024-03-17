@@ -202,8 +202,7 @@ def index():
 # Route to handle form submission and display analysis results
 @app.route('/analyze', methods=['POST'])
 def analyze_data():
-   
-    
+    try:
         # Get user input from form
         url = request.form['url']
 
@@ -236,30 +235,19 @@ def analyze_data():
 
         # Count number of sentences without removing periods
         num_sentences = len(nltk.sent_tokenize(text))
-  
-        cleaned_text = str(clean_text(text))
 
+        cleaned_text = str(clean_text(text))
 
         blob = TextBlob(str(cleaned_text))
 
-
-        # # Perform sentiment analysisprint(f"Type of 'text' variable: {type(text)}")
-
+        # Perform sentiment analysis
         sentiment_score = blob.sentiment.polarity
-
-        
-
-
 
         # Word cloud generation
         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cleaned_text)
 
-        #TextBlob sentiment analysis
-        # Perform sentiment analysis
-    
-
+        # TextBlob sentiment analysis
         textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
-
 
         # Polarity distribution plot
         polarity_plot = generate_polarity_plot(cleaned_text)
@@ -278,7 +266,6 @@ def analyze_data():
             elif tag.startswith('JJ'):  # Adjective
                 pos_counts['Adjective'] += 1
 
-
         # Perform Named Entity Recognition (NER)
         ner_results = perform_ner(cleaned_text)
 
@@ -286,13 +273,10 @@ def analyze_data():
         keywords = extract_keywords(cleaned_text)
 
         # Word frequency distribution
-         # Calculate word frequency distribution excluding dots and commas
-        word_freq_table = Counter(word for word in tokens if word not in ['.', ',','"'," ' ",","])
+        word_freq_table = Counter(word for word in tokens if word not in ['.', ',', '"', "'", ",", ])
 
-# Get top 10 most frequent words
+        # Get top 10 most frequent words
         top_10_words = dict(word_freq_table.most_common(10))
-
-        
 
         # Perform text summarization
         summary = generate_summary(cleaned_text)
@@ -308,8 +292,8 @@ def analyze_data():
         cur = conn.cursor()
 
         # Replace placeholders with actual variables containing data
-        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score,pos_tags) VALUES (%s, %s, %s, %s, %s,%s)",
-                    (url, str(text), num_words, num_sentences,sentiment_score ,json.dumps(pos_counts)))
+        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score, pos_tags) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (url, str(text), num_words, num_sentences, sentiment_score, json.dumps(pos_counts)))
 
         # Commit the transaction
         conn.commit()
@@ -320,10 +304,10 @@ def analyze_data():
 
         # Render template with analysis results
         return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
-                              sentiment_score=sentiment_score,
+                               sentiment_score=sentiment_score,
                                paragraphs=text,
                                wordcloud_img=encoded_img_data,
-                              textblob_sentiment_plot=textblob_sentiment_plot,
+                               textblob_sentiment_plot=textblob_sentiment_plot,
                                polarity_plot=polarity_plot,
                                ner_results=ner_results,
                                keywords=keywords,
@@ -331,6 +315,10 @@ def analyze_data():
                                summary=summary,
                                headings_text=headings_text
                                )
+    except requests.exceptions.RequestException as e:
+        return f"Error: Failed to fetch data from the provided URL. {e}"
+    except Exception as e:
+        return f"An error occurred while processing the data: {e}"
 
     
 
