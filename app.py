@@ -11,7 +11,6 @@ import base64
 import io
 import matplotlib.pyplot as plt
 import seaborn as sns
-import spacy
 import psycopg2
 from collections import Counter
 import json
@@ -30,7 +29,6 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
 );'''
 nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
-nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
 DB_HOST = 'localhost'
