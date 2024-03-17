@@ -74,12 +74,6 @@ github = oauth.register(
 # Download NLTK resources (run this only once)
 nltk.download('punkt')
 nltk.download('stopwords')
-
-
-
-# 
-
-
 # Function to check if admin is logged in
 def is_admin_logged_in():
     return session.get('admin_logged_in', False)
@@ -91,11 +85,7 @@ def perform_ner(text):
     # Remove duplicate entities
     unique_entities = list(set(entities))
     return unique_entities
-   
-
-
-
-# Function to perform Keyword Extraction
+   # Function to perform Keyword Extraction
 def extract_keywords(text, min_freq=2, min_word_length=3):
     doc = nlp(text)
     # Get nouns and proper nouns as keywords
@@ -236,11 +226,6 @@ def analyze_data():
         # Clean the text
         cleaned_text = str(clean_text(text))
 
-        # Debug message to verify the data type of cleaned_text
-        print(f"Data type of cleaned_text: {type(cleaned_text)}")  # Add this line to print the type of 'cleaned_text'
-
-
-
         # Tokenize cleaned text
         tokens = nltk.word_tokenize(cleaned_text)
 
@@ -255,23 +240,7 @@ def analyze_data():
   
         cleaned_text = str(clean_text(text))
 
-        
 
-        # Debug message to verify the data type of cleaned_text
-        print(f"Data type of cleaned_text: {type(cleaned_text)}")
-
-        
-
-        # # Debug message after converting to string
-        print("Cleaned text after converting to string:", cleaned_text)
-
-        # # Convert cleaned_text to UTF-8 string
-        
-
-        # # Create a TextBlob object
-        print(f"Type of 'text' variable: {type(text)}")
-
-      
         blob = TextBlob(str(cleaned_text))
 
 
