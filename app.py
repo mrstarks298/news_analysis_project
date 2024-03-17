@@ -28,22 +28,22 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     sentiment_score FLOAT,
     pos_tags JSON
 );'''
-# nlp = nltk.download('maxent_ne_chunker')
-# nltk.download('maxent_ne_chunker')
+nlp = nltk.download('maxent_ne_chunker')
+nltk.download('maxent_ne_chunker')
 
 
-import spacy
+# import spacy
 
-# Load SpaCy English language model
-nlp = spacy.load('en_core_web_sm')
+# # Load SpaCy English language model
+# nlp = spacy.load('en_core_web_sm')
 
-# Function to perform Named Entity Recognition (NER) using SpaCy
-def perform_ner(text):
-    doc = nlp(text)
-    entities = [(ent.text, ent.label_) for ent in doc.ents]
-    # Remove duplicate entities
-    unique_entities = list(set(entities))
-    return unique_entities
+# # Function to perform Named Entity Recognition (NER) using SpaCy
+# def perform_ner(text):
+#     doc = nlp(text)
+#     entities = [(ent.text, ent.label_) for ent in doc.ents]
+#     # Remove duplicate entities
+#     unique_entities = list(set(entities))
+#     return unique_entities
 
 
 
