@@ -11,11 +11,14 @@ import base64
 import io
 import matplotlib.pyplot as plt
 import seaborn as sns
+import spacy
 import psycopg2
+from collections import Counter
 import json
 nltk.download  ('averaged_perceptron_tagger')
 nltk.download("stopwords")
-
+nltk.download("punkt")
+nltk.download('universal_tagset')
 create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
     url TEXT,
@@ -27,9 +30,10 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
 );'''
 nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
+nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
-DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-at'
+DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
 
 DB_NAME = 'sitare'
 DB_USER = 'saurabh'
@@ -72,6 +76,12 @@ github = oauth.register(
 # Download NLTK resources (run this only once)
 nltk.download('punkt')
 nltk.download('stopwords')
+
+
+
+# 
+
+
 # Function to check if admin is logged in
 def is_admin_logged_in():
     return session.get('admin_logged_in', False)
@@ -83,7 +93,11 @@ def perform_ner(text):
     # Remove duplicate entities
     unique_entities = list(set(entities))
     return unique_entities
-   # Function to perform Keyword Extraction
+   
+
+
+
+# Function to perform Keyword Extraction
 def extract_keywords(text, min_freq=2, min_word_length=3):
     doc = nlp(text)
     # Get nouns and proper nouns as keywords
@@ -198,7 +212,7 @@ def generate_summary(text):
 def index():
     return render_template('index.html')
 
-# Route to handle form submission and display ana
+# Route to handle form submission and display analysis results
 @app.route('/analyze', methods=['POST'])
 def analyze_data():
     url=''
@@ -224,9 +238,10 @@ def analyze_data():
         # Clean the text
         cleaned_text = str(clean_text(text))
 
-        # Check if cleaned_text is not None and is a string
-        if cleaned_text is None or not isinstance(cleaned_text, str):
-            raise ValueError("Cleaned text is not valid.")
+        # Debug message to verify the data type of cleaned_text
+        print(f"Data type of cleaned_text: {type(cleaned_text)}")  # Add this line to print the type of 'cleaned_text'
+
+
 
         # Tokenize cleaned text
         tokens = nltk.word_tokenize(cleaned_text)
@@ -234,100 +249,129 @@ def analyze_data():
         # Perform part-of-speech tagging
         pos_tags = nltk.pos_tag(tokens)
 
-        # Check if pos_tags is not None and is iterable
-        if pos_tags is not None and isinstance(pos_tags, collections.Iterable):
-            # Count number of words
-            num_words = len(tokens)
+        # Count number of words
+        num_words = len(tokens)
 
-            # Count number of sentences without removing periods
-            num_sentences = len(nltk.sent_tokenize(text))
+        # Count number of sentences without removing periods
+        num_sentences = len(nltk.sent_tokenize(text))
+  
+        cleaned_text = str(clean_text(text))
 
-            # Perform sentiment analysis
-            blob = TextBlob(str(cleaned_text))
-            sentiment_score = blob.sentiment.polarity
+        
 
-            # Word cloud generation
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cleaned_text)
+        # Debug message to verify the data type of cleaned_text
+        print(f"Data type of cleaned_text: {type(cleaned_text)}")
 
-            # TextBlob sentiment analysis
-            textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
+        
 
-            # Polarity distribution plot
-            polarity_plot = generate_polarity_plot(cleaned_text)
+        # # Debug message after converting to string
+        print("Cleaned text after converting to string:", cleaned_text)
 
-            # Count POS tags
-            pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
-            for _, tag in pos_tags:
-                if tag.startswith('NN'):  # Noun
-                    pos_counts['Noun'] += 1
-                elif tag.startswith('PR'):  # Pronoun
-                    pos_counts['Pronoun'] += 1
-                elif tag.startswith('VB'):  # Verb
-                    pos_counts['Verb'] += 1
-                elif tag.startswith('RB'):  # Adverb
-                    pos_counts['Adverb'] += 1
-                elif tag.startswith('JJ'):  # Adjective
-                    pos_counts['Adjective'] += 1
+        # # Convert cleaned_text to UTF-8 string
+        
 
-            # Perform Named Entity Recognition (NER)
-            ner_results = perform_ner(cleaned_text)
+        # # Create a TextBlob object
+        print(f"Type of 'text' variable: {type(text)}")
 
-            # Extract keywords
-            keywords = extract_keywords(cleaned_text)
+      
+        blob = TextBlob(str(cleaned_text))
 
-            # Word frequency distribution
-            word_freq_table = Counter(word for word in tokens if word not in ['.', ',', '"', "'", ",", ])
 
-            # Get top 10 most frequent words
-            top_10_words = dict(word_freq_table.most_common(10))
+        # # Perform sentiment analysisprint(f"Type of 'text' variable: {type(text)}")
 
-            # Perform text summarization
-            summary = generate_summary(cleaned_text)
+        sentiment_score = blob.sentiment.polarity
 
-            # Convert Word Cloud image to base64
-            img_data = io.BytesIO()
-            wordcloud.to_image().save(img_data, format='PNG')
-            img_data.seek(0)
-            encoded_img_data = base64.b64encode(img_data.getvalue()).decode()
+        
 
-            # Insert data into the database
-            conn = connect_to_db()
-            cur = conn.cursor()
 
-            # Replace placeholders with actual variables containing data
-            cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score, pos_tags) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (url, str(text), num_words, num_sentences, sentiment_score, json.dumps(pos_counts)))
 
-            # Commit the transaction
-            conn.commit()
+        # Word cloud generation
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cleaned_text)
 
-            # Close database connection
-            cur.close()
-            conn.close()
+        #TextBlob sentiment analysis
+        # Perform sentiment analysis
+        sentiment_score = blob.sentiment.polarity
 
-            # Render template with analysis results
-            return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
-                                    sentiment_score=sentiment_score,
-                                    paragraphs=text,
-                                    wordcloud_img=encoded_img_data,
-                                    textblob_sentiment_plot=textblob_sentiment_plot,
-                                    polarity_plot=polarity_plot,
-                                    ner_results=ner_results,
-                                    keywords=keywords,
-                                    word_freq_table=top_10_words,
-                                    summary=summary,
-                                    headings_text=headings_text
-                                    )
+        textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
 
-        else:
-            raise ValueError("POS tags are not valid.")
+
+        # Polarity distribution plot
+        polarity_plot = generate_polarity_plot(cleaned_text)
+
+        # Count POS tags
+        pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
+        print(pos_tags)
+        print(type(pos_tags))
+        for _, tag in pos_tags:
+            if tag.startswith('NN'):  # Noun
+                pos_counts['Noun'] += 1
+            elif tag.startswith('PR'):  # Pronoun
+                pos_counts['Pronoun'] += 1
+            elif tag.startswith('VB'):  # Verb
+                pos_counts['Verb'] += 1
+            elif tag.startswith('RB'):  # Adverb
+                pos_counts['Adverb'] += 1
+            elif tag.startswith('JJ'):  # Adjective
+                pos_counts['Adjective'] += 1
+
+
+        # Perform Named Entity Recognition (NER)
+        ner_results = perform_ner(cleaned_text)
+
+        # Extract keywords
+        keywords = extract_keywords(cleaned_text)
+
+        # Word frequency distribution
+         # Calculate word frequency distribution excluding dots and commas
+        word_freq_table = Counter(word for word in tokens if word not in ['.', ',','"'," ' ",","])
+
+# Get top 10 most frequent words
+        top_10_words = dict(word_freq_table.most_common(10))
+
+        
+
+        # Perform text summarization
+        summary = generate_summary(cleaned_text)
+
+        # Convert Word Cloud image to base64
+        img_data = io.BytesIO()
+        wordcloud.to_image().save(img_data, format='PNG')
+        img_data.seek(0)
+        encoded_img_data = base64.b64encode(img_data.getvalue()).decode()
+
+        # Insert data into the database
+        conn = connect_to_db()
+        cur = conn.cursor()
+
+        # Replace placeholders with actual variables containing data
+        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score,pos_tags) VALUES (%s, %s, %s, %s, %s,%s)",
+                    (url, str(text), num_words, num_sentences,sentiment_score ,json.dumps(pos_counts)))
+
+        # Commit the transaction
+        conn.commit()
+
+        # Close database connection
+        cur.close()
+        conn.close()
+
+        # Render template with analysis results
+        return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
+                              sentiment_score=sentiment_score,
+                               paragraphs=text,
+                               wordcloud_img=encoded_img_data,
+                              textblob_sentiment_plot=textblob_sentiment_plot,
+                               polarity_plot=polarity_plot,
+                               ner_results=ner_results,
+                               keywords=keywords,
+                               word_freq_table=top_10_words,
+                               summary=summary,
+                               headings_text=headings_text
+                               )
 
     except requests.exceptions.RequestException as e:
         return f"Error: Failed to fetch data from the provided URL. {e}"
     except Exception as e:
         return f"An error occurred while processing the data: {e}"
-
-    
 
 
 
@@ -421,5 +465,4 @@ def github_logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 
