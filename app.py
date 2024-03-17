@@ -28,7 +28,7 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     sentiment_score FLOAT,
     pos_tags JSON
 );'''
-nlp = nltk.download('maxent_ne_chunker')
+#nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
 
 
