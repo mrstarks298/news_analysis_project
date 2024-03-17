@@ -239,7 +239,7 @@ def analyze_data():
         cleaned_text = clean_text(text)
     
         # Debug message to verify the data type of cleaned_text
-        print(f"Data type of cleaned_text: {type(cleaned_text)}")
+        #print(f"Data type of cleaned_text: {type(cleaned_text)}")
     
         # Tokenize cleaned text
         tokens = nltk.word_tokenize(cleaned_text)
@@ -257,7 +257,7 @@ def analyze_data():
         cleaned_text = str(cleaned_text)
     
         # Debug message after converting to string
-        print("Cleaned text after converting to string:", cleaned_text)
+        #print("Cleaned text after converting to string:", cleaned_text)
     
         # Create a TextBlob object
         blob = TextBlob(cleaned_text)
@@ -276,8 +276,8 @@ def analyze_data():
     
         # Count POS tags
         pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
-        print(pos_tags)
-        print(type(pos_tags))
+        #print(pos_tags)
+        #print(type(pos_tags))
         for _, tag in pos_tags:
             if tag.startswith('NN'):  # Noun
                 pos_counts['Noun'] += 1
@@ -289,6 +289,7 @@ def analyze_data():
                 pos_counts['Adverb'] += 1
             elif tag.startswith('JJ'):  # Adjective
                 pos_counts['Adjective'] += 1
+            
     
         # Perform Named Entity Recognition (NER)
         ner_results = perform_ner(cleaned_text)
