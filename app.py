@@ -27,11 +27,12 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     num_sentences INTEGER,
     sentiment_score FLOAT,
     pos_tags JSON
-);'''
-import spacy
+# );'''
+# import spacy
 
-# Download spaCy model
-nlp = spacy.load('en_core_web_sm')
+# # Download spaCy model
+# nlp = spacy.load('en_core_web_sm')
+nlp = nltk.download('maxent_ne_chunker')
 
 nltk.download('maxent_ne_chunker')
 
