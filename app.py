@@ -222,7 +222,7 @@ def analyze_data():
         
         # Fetch data from the provided website
         response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+      
         html = response.text
         
         # Parse HTML
