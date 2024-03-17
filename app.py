@@ -14,6 +14,7 @@ import seaborn as sns
 import psycopg2
 from collections import Counter
 import json
+
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('averaged_perceptron_tagger')
@@ -27,7 +28,7 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     num_words INTEGER,
     num_sentences INTEGER,
     sentiment_score FLOAT,
-    pos_tags JSON
+    pos_counts JSON
 );'''
 
 # Database configuration
@@ -127,7 +128,6 @@ def generate_summary(text):
     summary = ' '.join(summary_sentences)
     return summary
 
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -206,7 +206,7 @@ def analyze_data():
         conn = connect_to_db()
         cur = conn.cursor()
 
-        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score, pos_tags) VALUES (%s, %s, %s, %s, %s, %s)",
+        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score, pos_counts) VALUES (%s, %s, %s, %s, %s, %s)",
                     (url, str(text), num_words, num_sentences, sentiment_score, json.dumps(pos_counts)))
         conn.commit()
 
@@ -272,7 +272,7 @@ def github_login():
     redirect_uri = url_for('github_authorize', _external=True)
     return github.authorize_redirect(redirect_uri)
 
-@app.route('/login/github/authorize',methods =['GET'])
+@app.route('/login/github/authorize', methods=['GET'])
 def github_authorize():
     github = oauth.create_client('github')
     token = github.authorize_access_token()
