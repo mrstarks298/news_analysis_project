@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +13,155 @@
             color: #eee;
         }
 
-  
+        .banner {
+            background-image: url('path_to_your_image.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 200px; /* Adjust height as needed */
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #d18b8b;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(98, 91, 91, 0.5);
+        }
+
+        h1, h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            background-color: #555;
+            color: #eee;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <h1>Newslaundry Analysis Hub</h1>
+    </div>
+
+    <div class="container">
+        <!-- Website Analysis Form 
+        <form action="/analyze" method="post">
+            <label for="url">Enter website URL:</label>
+            <input type="text" id="url" name="url" placeholder="https://example.com" required>
+            <input type="submit" value="Analyze">
+        </form>
+
+        <!-- Admin Login Form 
+        <h2>Admin Login</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form action="/admin-login" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <input type="submit" value="Login">
+        </form>
+
+        <!-- View Search History Link 
+    
+        
+        {% if session.admin_logged_in %} 
+        
+            <h2 style="color: #007bff; text-align: center;">Search History</h2>
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="text-align: center; margin-top: 20px;">
+                    <form action="{{ url_for('admin_page') }}" method="get">
+                        <button type="submit" style="background-color: #007bff; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">View Search History</button>
+                    </form>
+                </li>
+            </ul>
+        {% endif %}
+        
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newslaundry Website Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #cac2c2;
+            color: #eee;
+
 
         .container {
             max-width: 800px;
