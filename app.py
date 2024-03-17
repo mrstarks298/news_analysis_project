@@ -61,28 +61,6 @@ def extract_keywords(text, min_freq=2, min_word_length=3):
     keywords = [word for word, freq in word_freq.items() if freq >= min_freq]
     return keywords
 
-# Count POS tags
-pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
-if pos_tags:
-    for _, tag in pos_tags:
-        if tag.startswith('NN'):  # Noun
-            pos_counts['Noun'] += 1
-        elif tag.startswith('PR'):  # Pronoun
-            pos_counts['Pronoun'] += 1
-        elif tag.startswith('VB'):  # Verb
-            pos_counts['Verb'] += 1
-        elif tag.startswith('RB'):  # Adverb
-            pos_counts['Adverb'] += 1
-        elif tag.startswith('JJ'):  # Adjective
-            pos_counts['Adjective'] += 1
-else:
-    # Handle the case when pos_tags is None
-    # For example, you can print a message or set default values
-    print("No POS tags found.")
-    # Set default values if needed
-    # pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
-
-
 # Function to clean HTML text
 def clean_text(html_text):
     soup = BeautifulSoup(html_text, 'html.parser')
@@ -209,17 +187,31 @@ def analyze_data():
         img_data.seek(0)
         encoded_img_data = base64.b64encode(img_data.getvalue()).decode()
 
+        # Perform POS tagging and count POS tags
+        pos_tags = nltk.pos_tag(tokens)
+        pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
+        for _, tag in pos_tags:
+            if tag.startswith('NN'):  # Noun
+                pos_counts['Noun'] += 1
+            elif tag.startswith('PR'):  # Pronoun
+                pos_counts['Pronoun'] += 1
+            elif tag.startswith('VB'):  # Verb
+                pos_counts['Verb'] += 1
+            elif tag.startswith('RB'):  # Adverb
+                pos_counts['Adverb'] += 1
+            elif tag.startswith('JJ'):  # Adjective
+                pos_counts['Adjective'] += 1
+
         conn = connect_to_db()
         cur = conn.cursor()
 
-        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score) VALUES (%s, %s, %s, %s, %s)",
-                    (url, str(text), num_words, num_sentences, sentiment_score))
+        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score, pos_tags) VALUES (%s, %s, %s, %s, %s, %s)",
+                    (url, str(text), num_words, num_sentences, sentiment_score, json.dumps(pos_counts)))
         conn.commit()
 
         cur.close()
         conn.close()
 
-        pos_counts = None  # Initialize pos_counts here
         return render_template('results.html', num_words=num_words, num_sentences=num_sentences,
                                sentiment_score=sentiment_score, paragraphs=text,
                                wordcloud_img=encoded_img_data,
@@ -228,7 +220,7 @@ def analyze_data():
                                keywords=keywords,
                                summary=summary,
                                headings_text=headings_text,
-                               pos_counts=pos_counts)  # Pass pos_counts to template
+                               pos_counts=pos_counts)
 
     except requests.exceptions.RequestException as e:
         return f"Error: Failed to fetch data from the provided URL. {e}"
