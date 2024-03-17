@@ -28,7 +28,11 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     sentiment_score FLOAT,
     pos_tags JSON
 );'''
-nlp = nltk.download('maxent_ne_chunker')
+import spacy
+
+# Download spaCy model
+nlp = spacy.load('en_core_web_sm')
+
 nltk.download('maxent_ne_chunker')
 
 
@@ -74,8 +78,8 @@ github = oauth.register(
 
 
 # Download NLTK resources (run this only once)
-nltk.download('punkt')
-nltk.download('stopwords')
+# nltk.download('punkt')
+# nltk.download('stopwords')
 
 
 
