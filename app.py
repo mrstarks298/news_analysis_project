@@ -217,59 +217,91 @@ def index():
 def analyze_data():
     url=''
     try:
-    # Get user input from form
+        # Get user input from form
         url = request.form['url']
-        
+
         # Fetch data from the provided website
         response = requests.get(url)
-      
+        response.raise_for_status()  # Raise an exception for HTTP errors
         html = response.text
-        
+
         # Parse HTML
         soup = BeautifulSoup(html, 'html.parser')
         heading_container = soup.select('.headline.PyI5Q')
         headings = [heading.find('bdi').get_text() for heading in heading_container]
         headings_text = ' '.join(headings)
-        
+
         paragraphs_container = soup.select_one('.story-element.story-element-text')
         paragraphs = [paragraph.get_text() for paragraph in paragraphs_container.find_all('p')]
         text = ' '.join(paragraphs)
-        
+
         # Clean the text
-        cleaned_text = clean_text(text)
-        
+        cleaned_text = str(clean_text(text))
+
+        # Debug message to verify the data type of cleaned_text
+        print(f"Data type of cleaned_text: {type(cleaned_text)}")  # Add this line to print the type of 'cleaned_text'
+
+
+
         # Tokenize cleaned text
         tokens = nltk.word_tokenize(cleaned_text)
-        
+
         # Perform part-of-speech tagging
         pos_tags = nltk.pos_tag(tokens)
-        
+
         # Count number of words
         num_words = len(tokens)
-        
+
         # Count number of sentences without removing periods
         num_sentences = len(nltk.sent_tokenize(text))
+  
+        cleaned_text = str(clean_text(text))
+
         
-        # Convert cleaned_text to string
-        cleaned_text = str(cleaned_text)
+
+        # Debug message to verify the data type of cleaned_text
+        print(f"Data type of cleaned_text: {type(cleaned_text)}")
+
         
-        # Create a TextBlob object
-        blob = TextBlob(cleaned_text)
+
+        # # Debug message after converting to string
+        print("Cleaned text after converting to string:", cleaned_text)
+
+        # # Convert cleaned_text to UTF-8 string
         
-        # Perform sentiment analysis
+
+        # # Create a TextBlob object
+        print(f"Type of 'text' variable: {type(text)}")
+
+      
+        blob = TextBlob(str(cleaned_text))
+
+
+        # # Perform sentiment analysisprint(f"Type of 'text' variable: {type(text)}")
+
         sentiment_score = blob.sentiment.polarity
+
         
+
+
+
         # Word cloud generation
         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cleaned_text)
-        
-        # TextBlob sentiment analysis
+
+        #TextBlob sentiment analysis
+        # Perform sentiment analysis
+        sentiment_score = blob.sentiment.polarity
+
         textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
-        
+
+
         # Polarity distribution plot
         polarity_plot = generate_polarity_plot(cleaned_text)
-        
+
         # Count POS tags
         pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
+        print(pos_tags)
+        print(type(pos_tags))
         for _, tag in pos_tags:
             if tag.startswith('NN'):  # Noun
                 pos_counts['Noun'] += 1
@@ -281,48 +313,53 @@ def analyze_data():
                 pos_counts['Adverb'] += 1
             elif tag.startswith('JJ'):  # Adjective
                 pos_counts['Adjective'] += 1
-        
+
+
         # Perform Named Entity Recognition (NER)
         ner_results = perform_ner(cleaned_text)
-        
+
         # Extract keywords
         keywords = extract_keywords(cleaned_text)
-        
+
         # Word frequency distribution
-        word_freq_table = Counter(word for word in tokens if word not in ['.', ',', '"', "'", ","])
-        
-        # Get top 10 most frequent words
+         # Calculate word frequency distribution excluding dots and commas
+        word_freq_table = Counter(word for word in tokens if word not in ['.', ',','"'," ' ",","])
+
+# Get top 10 most frequent words
         top_10_words = dict(word_freq_table.most_common(10))
+
         
+
         # Perform text summarization
         summary = generate_summary(cleaned_text)
-        
+
         # Convert Word Cloud image to base64
         img_data = io.BytesIO()
         wordcloud.to_image().save(img_data, format='PNG')
         img_data.seek(0)
         encoded_img_data = base64.b64encode(img_data.getvalue()).decode()
-        
+
         # Insert data into the database
         conn = connect_to_db()
         cur = conn.cursor()
-        
+
         # Replace placeholders with actual variables containing data
-        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score, pos_tags) VALUES (%s, %s, %s, %s, %s, %s)",
-                    (url, str(text), num_words, num_sentences, sentiment_score, json.dumps(pos_counts)))
-        
+        cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score,pos_tags) VALUES (%s, %s, %s, %s, %s,%s)",
+                    (url, str(text), num_words, num_sentences,sentiment_score ,json.dumps(pos_counts)))
+
         # Commit the transaction
         conn.commit()
-        
+
         # Close database connection
         cur.close()
         conn.close()
-        
+
+        # Render template with analysis results
         return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
-                               sentiment_score=sentiment_score,
+                              sentiment_score=sentiment_score,
                                paragraphs=text,
                                wordcloud_img=encoded_img_data,
-                               textblob_sentiment_plot=textblob_sentiment_plot,
+                              textblob_sentiment_plot=textblob_sentiment_plot,
                                polarity_plot=polarity_plot,
                                ner_results=ner_results,
                                keywords=keywords,
@@ -330,13 +367,11 @@ def analyze_data():
                                summary=summary,
                                headings_text=headings_text
                                )
-    
+
+    except requests.exceptions.RequestException as e:
+        return f"Error: Failed to fetch data from the provided URL. {e}"
     except Exception as e:
-        error_message = f"An error occurred: {str(e)}"
-        print(error_message)
-        
-
-
+        return f"An error occurred while processing the data: {e}"
 
 # Route to display admin login form
 @app.route('/admin-login', methods=['GET', 'POST'])
