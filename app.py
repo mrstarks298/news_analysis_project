@@ -61,6 +61,28 @@ def extract_keywords(text, min_freq=2, min_word_length=3):
     keywords = [word for word, freq in word_freq.items() if freq >= min_freq]
     return keywords
 
+# Count POS tags
+pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
+if pos_tags:
+    for _, tag in pos_tags:
+        if tag.startswith('NN'):  # Noun
+            pos_counts['Noun'] += 1
+        elif tag.startswith('PR'):  # Pronoun
+            pos_counts['Pronoun'] += 1
+        elif tag.startswith('VB'):  # Verb
+            pos_counts['Verb'] += 1
+        elif tag.startswith('RB'):  # Adverb
+            pos_counts['Adverb'] += 1
+        elif tag.startswith('JJ'):  # Adjective
+            pos_counts['Adjective'] += 1
+else:
+    # Handle the case when pos_tags is None
+    # For example, you can print a message or set default values
+    print("No POS tags found.")
+    # Set default values if needed
+    # pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
+
+
 # Function to clean HTML text
 def clean_text(html_text):
     soup = BeautifulSoup(html_text, 'html.parser')
