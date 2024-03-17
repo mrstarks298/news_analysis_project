@@ -16,8 +16,7 @@ from collections import Counter
 import json
 nltk.download  ('averaged_perceptron_tagger')
 nltk.download("stopwords")
-nltk.download("punkt")
-nltk.download('universal_tagset')
+
 create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
     url TEXT,
