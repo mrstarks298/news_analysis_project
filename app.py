@@ -33,11 +33,11 @@ nltk.download('maxent_ne_chunker')
 nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
-DB_HOST = 'localhost'
+DB_HOST = 'dpg-cn0akhmd3nmc738a4mcg-at'
 
-DB_NAME = 'postgres'
-DB_USER = 'postgres'
-DB_PASSWORD ='Saurabh_Agrahari'
+DB_NAME = 'sitare_hiring_data'
+DB_USER = 's'
+DB_PASSWORD ='m5eAZw9B93e3yI3zq8VVFBDpLzyKNmQfi'
 # Function to establish database connection and create the table if it doesn't exist
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
