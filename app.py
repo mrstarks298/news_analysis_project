@@ -192,19 +192,7 @@ def analyze_data():
         encoded_img_data = base64.b64encode(img_data.getvalue()).decode()
 
         # Perform POS tagging and count POS tags
-        pos_tags = nltk.pos_tag(tokens)
-        pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
-        for _, tag in pos_tags:
-            if tag.startswith('NN'):  # Noun
-                pos_counts['Noun'] += 1
-            elif tag.startswith('PR'):  # Pronoun
-                pos_counts['Pronoun'] += 1
-            elif tag.startswith('VB'):  # Verb
-                pos_counts['Verb'] += 1
-            elif tag.startswith('RB'):  # Adverb
-                pos_counts['Adverb'] += 1
-            elif tag.startswith('JJ'):  # Adjective
-                pos_counts['Adjective'] += 1
+        pos_counts = Counter(tag for word, tag in nltk.pos_tag(tokens))
 
         conn = connect_to_db()
         cur = conn.cursor()
