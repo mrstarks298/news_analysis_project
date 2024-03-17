@@ -197,6 +197,7 @@ def analyze_data():
         cur.close()
         conn.close()
 
+        pos_counts = None  # Initialize pos_counts here
         return render_template('results.html', num_words=num_words, num_sentences=num_sentences,
                                sentiment_score=sentiment_score, paragraphs=text,
                                wordcloud_img=encoded_img_data,
@@ -204,7 +205,8 @@ def analyze_data():
                                polarity_plot=polarity_plot,
                                keywords=keywords,
                                summary=summary,
-                               headings_text=headings_text)
+                               headings_text=headings_text,
+                               pos_counts=pos_counts)  # Pass pos_counts to template
 
     except requests.exceptions.RequestException as e:
         return f"Error: Failed to fetch data from the provided URL. {e}"
