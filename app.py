@@ -256,7 +256,7 @@ def analyze_data():
 
         #TextBlob sentiment analysis
         # Perform sentiment analysis
-    y
+    
 
         textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
 
