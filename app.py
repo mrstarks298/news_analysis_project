@@ -21,6 +21,7 @@ nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('universal_tagset')
 nltk.download('maxent_ne_chunker')
+nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
 DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
@@ -45,10 +46,6 @@ oauth = OAuth(app)
 app.config['SECRET_KEY'] = "Saurabh"
 app.config['GITHUB_CLIENT_ID'] = "7fea963be225cab0f44f"
 app.config['GITHUB_CLIENT_SECRET'] = "9b9d4e994a94c55e1dd1fa651da32476c2e309f7"
-
-# Load SpaCy English language model
-nlp = spacy.load('en_core_web_sm')
-
 
 # Function to establish database connection and create the table if it doesn't exist
 def connect_to_db():
