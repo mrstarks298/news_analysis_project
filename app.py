@@ -11,14 +11,17 @@ import base64
 import io
 import matplotlib.pyplot as plt
 import seaborn as sns
-import spacy
 import psycopg2
 from collections import Counter
 import json
+
 nltk.download  ('averaged_perceptron_tagger')
 nltk.download("stopwords")
 nltk.download("punkt")
 nltk.download('universal_tagset')
+
+
+
 create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
     url TEXT,
@@ -30,7 +33,6 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
 );'''
 nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
-nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
 DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
