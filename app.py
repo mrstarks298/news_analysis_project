@@ -202,8 +202,8 @@ def index():
 # Route to handle form submission and display analysis results
 @app.route('/analyze', methods=['POST'])
 def analyze_data():
-    url=''
-    try:
+   
+    
         # Get user input from form
         url = request.form['url']
 
@@ -332,10 +332,7 @@ def analyze_data():
                                headings_text=headings_text
                                )
 
-    except requests.exceptions.RequestException as e:
-        return f"Error: Failed to fetch data from the provided URL. {e}"
-    except Exception as e:
-        return f"An error occurred while processing the data: {e}"
+    
 
 
 
