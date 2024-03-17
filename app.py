@@ -11,7 +11,6 @@ import base64
 import io
 import matplotlib.pyplot as plt
 import seaborn as sns
-import spacy
 import psycopg2
 from collections import Counter
 import json
@@ -21,7 +20,6 @@ nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('universal_tagset')
 nltk.download('maxent_ne_chunker')
-nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
 DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
@@ -47,6 +45,7 @@ app.config['SECRET_KEY'] = "Saurabh"
 app.config['GITHUB_CLIENT_ID'] = "7fea963be225cab0f44f"
 app.config['GITHUB_CLIENT_SECRET'] = "9b9d4e994a94c55e1dd1fa651da32476c2e309f7"
 
+
 # Function to establish database connection and create the table if it doesn't exist
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
@@ -58,6 +57,8 @@ def connect_to_db():
 
 # Function to perform Named Entity Recognition (NER) using SpaCy
 def perform_ner(text):
+    # Load SpaCy English language model
+    nlp = spacy.load('en_core_web_sm')
     doc = nlp(text)
     entities = [(ent.text, ent.label_) for ent in doc.ents]
     # Remove duplicate entities
@@ -67,6 +68,8 @@ def perform_ner(text):
 
 # Function to perform Keyword Extraction
 def extract_keywords(text, min_freq=2, min_word_length=3):
+    # Load SpaCy English language model
+    nlp = spacy.load('en_core_web_sm')
     doc = nlp(text)
     # Get nouns and proper nouns as keywords
     keywords = [token.text for token in doc if token.pos_ in ['NOUN', 'PROPN', 'ADJ', 'VERB'] and len(token.text) >= min_word_length]
