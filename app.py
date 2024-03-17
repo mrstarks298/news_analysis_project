@@ -327,6 +327,18 @@ def analyze_data():
         # Close database connection
         cur.close()
         conn.close()
+        return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
+                              sentiment_score=sentiment_score,
+                               paragraphs=text,
+                               wordcloud_img=encoded_img_data,
+                              textblob_sentiment_plot=textblob_sentiment_plot,
+                               polarity_plot=polarity_plot,
+                               ner_results=ner_results,
+                               keywords=keywords,
+                               word_freq_table=top_10_words,
+                               summary=summary,
+                               headings_text=headings_text
+                               )
     
     except Exception as e:
         print("An error occurred:", e)
@@ -364,7 +376,7 @@ def admin_page():
         # Close database connection
         cur.close()
         conn.close()
-
+        
         return render_template('admin_page.html', history_results=history_results)
     except Exception as e:
         return f"An error occurred while fetching history: {e}"
