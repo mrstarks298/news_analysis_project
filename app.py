@@ -34,9 +34,9 @@ nltk.download('maxent_ne_chunker')
 # Database configuration
 DB_HOST = 'localhost'
 
-DB_NAME = 'postgres'
-DB_USER = 'postgres'
-DB_PASSWORD ='Saurabh_Agrahari'
+DB_NAME = 'sitare'
+DB_USER = 'saurabh'
+DB_PASSWORD ='IFfcZguN27jCfKQDn42wBIv9fGZ6LhQT'
 # Function to establish database connection and create the table if it doesn't exist
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
