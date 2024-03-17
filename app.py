@@ -1,3 +1,4 @@
+# Import necessary libraries
 from flask import Flask, render_template, request, redirect, url_for, session
 from authlib.integrations.flask_client import OAuth
 import nltk
@@ -15,12 +16,14 @@ import psycopg2
 from collections import Counter
 import json
 
+# Download NLTK resources
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('maxent_ne_chunker')
 nltk.download('words')
 
+# Define the table creation query with the 'pos_counts' column
 create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
     url TEXT,
@@ -30,7 +33,6 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     sentiment_score FLOAT,
     pos_counts JSONB
 );'''
-
 
 # Database configuration
 DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
@@ -42,7 +44,7 @@ DB_PASSWORD = 'IFfcZguN27jCfKQDn42wBIv9fGZ6LhQT'
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
     cur = conn.cursor()
-    cur.execute(create_table_query)
+    cur.execute(create_table_query)  # Execute the table creation query
     conn.commit()
     return conn
 
