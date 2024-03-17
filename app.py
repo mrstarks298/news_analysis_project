@@ -32,7 +32,7 @@ nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
 
 # Database configuration
-DB_HOST = 'localhost'
+DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-at'
 
 DB_NAME = 'sitare'
 DB_USER = 'saurabh'
