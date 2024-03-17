@@ -12,7 +12,6 @@ import io
 import matplotlib.pyplot as plt
 import seaborn as sns
 import psycopg2
-from collections import Counter
 import json
 nltk.download  ('averaged_perceptron_tagger')
 nltk.download("stopwords")
