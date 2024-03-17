@@ -11,17 +11,14 @@ import base64
 import io
 import matplotlib.pyplot as plt
 import seaborn as sns
+import spacy
 import psycopg2
 from collections import Counter
 import json
-
 nltk.download  ('averaged_perceptron_tagger')
 nltk.download("stopwords")
 nltk.download("punkt")
 nltk.download('universal_tagset')
-
-
-
 create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
     url TEXT,
@@ -33,13 +30,14 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
 );'''
 nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
+nlp = spacy.load('en_core_web_sm')
 
 # Database configuration
-DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
+DB_HOST = 'localhost'
 
-DB_NAME = 'sitare'
-DB_USER = 'saurabh'
-DB_PASSWORD ='IFfcZguN27jCfKQDn42wBIv9fGZ6LhQT'
+DB_NAME = 'postgres'
+DB_USER = 'postgres'
+DB_PASSWORD ='Saurabh_Agrahari'
 # Function to establish database connection and create the table if it doesn't exist
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
