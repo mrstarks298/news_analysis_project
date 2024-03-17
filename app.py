@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from authlib.integrations.flask_client import OAuth
 import nltk
-bool = True  # or False
 from nltk.corpus import stopwords
 import requests
 from bs4 import BeautifulSoup
