@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, session
 from authlib.integrations.flask_client import OAuth
 import nltk
@@ -30,12 +29,15 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     pos_tags JSON
 );'''
 nlp = nltk.download('maxent_ne_chunker')
-# Database configuration
-DB_HOST = 'dpg-cn0akhmd3nmc738a4mcg-a'
+nltk.download('maxent_ne_chunker')
+nlp = spacy.load('en_core_web_sm')
 
-DB_NAME = 'sitare_hiring_data'
-DB_USER = 's'
-DB_PASSWORD ='m5eAZw9B93e3yI3zq8VVFBDpLzyKNmQf'
+# Database configuration
+DB_HOST = 'localhost'
+
+DB_NAME = 'postgres'
+DB_USER = 'postgres'
+DB_PASSWORD ='Saurabh_Agrahari'
 # Function to establish database connection and create the table if it doesn't exist
 def connect_to_db():
     conn = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
@@ -77,7 +79,7 @@ nltk.download('stopwords')
 
 
 
-# Function to establish database connection
+# 
 
 
 # Function to check if admin is logged in
@@ -93,10 +95,7 @@ def perform_ner(text):
     return unique_entities
    
 
-# def perform_ner(text):
-#     doc = nlp(text)
-#     entities = [(ent.text, ent.label_) for ent in doc.ents]
-#     return entities
+
 
 # Function to perform Keyword Extraction
 def extract_keywords(text, min_freq=2, min_word_length=3):
@@ -109,13 +108,12 @@ def extract_keywords(text, min_freq=2, min_word_length=3):
     keywords = [word for word, freq in word_freq.items() if freq >= min_freq]
     return keywords
 
-# def extract_keywords(text):
-#     doc = nlp(text)
-#     # Get nouns and proper nouns as keywords
-#     keywords = [token.text for token in doc if token.pos_ in ['NOUN', 'PROPN']]
-#     return keywords
 
-def clean_text(text):
+def clean_text(html_text):
+    # Parse HTML content
+    soup = BeautifulSoup(html_text, 'html.parser')
+    # Extract text from HTML
+    text = soup.get_text()
     # Remove punctuation except periods
     text = ''.join([char for char in text if char not in string.punctuation or char == '.' or char == '"' or char == "'"])
     # Convert text to lowercase
@@ -125,30 +123,33 @@ def clean_text(text):
     return text
 
    
-    # Remove extra whitespace
-    text = ' '.join(text.split())
-    return text
-    # Convert text to lowercase
-  
-    # Remove extra whitespace
-    text = ' '.join(text.split())
-    return text
+    
 
 # Function to generate sentiment plot
 def generate_sentiment_plot(sentences, title):
+    # Ensure that each element in 'sentences' is a string
+    sentences = [str(s) for s in sentences]
+    
+    # Calculate polarity scores for each sentence
     polarity_scores = [TextBlob(s).sentiment.polarity for s in sentences]
+    
+    # Generate histogram plot
     plt.figure(figsize=(10, 6))
     sns.histplot(polarity_scores, bins=20, kde=True)
     plt.xlabel('Sentence Polarity')
     plt.ylabel('Frequency')
     plt.title(title)
     plt.tight_layout()
+    
+    # Convert plot to base64-encoded image
     img_data = io.BytesIO()
     plt.savefig(img_data, format='png')
     plt.close()
     img_data.seek(0)
     encoded_img_data = base64.b64encode(img_data.getvalue()).decode()
+    
     return encoded_img_data
+
 
 # Function to generate polarity distribution plot
 def generate_polarity_plot(text):
@@ -216,7 +217,6 @@ def index():
 def analyze_data():
     url=''
     try:
-    
         # Get user input from form
         url = request.form['url']
 
@@ -226,29 +226,22 @@ def analyze_data():
         html = response.text
 
         # Parse HTML
-        
-        # soup = BeautifulSoup(html, 'html.parser')
-        # heading_container = soup.select('.headline.PyI5Q')  # Use select for multiple elements
-        # heading = [heading.get_text() for heading in heading_container.find('bdi')]  # Use find for the first matching element
         soup = BeautifulSoup(html, 'html.parser')
         heading_container = soup.select('.headline.PyI5Q')
-        headings =[ heading.find('bdi').get_text() for heading in heading_container]
+        headings = [heading.find('bdi').get_text() for heading in heading_container]
         headings_text = ' '.join(headings)
 
-
-        
-        
-
-
         paragraphs_container = soup.select_one('.story-element.story-element-text')
-
-
         paragraphs = [paragraph.get_text() for paragraph in paragraphs_container.find_all('p')]
-    
         text = ' '.join(paragraphs)
 
         # Clean the text
-        cleaned_text = clean_text(text)
+        cleaned_text = str(clean_text(text))
+
+        # Debug message to verify the data type of cleaned_text
+        print(f"Data type of cleaned_text: {type(cleaned_text)}")  # Add this line to print the type of 'cleaned_text'
+
+
 
         # Tokenize cleaned text
         tokens = nltk.word_tokenize(cleaned_text)
@@ -261,17 +254,44 @@ def analyze_data():
 
         # Count number of sentences without removing periods
         num_sentences = len(nltk.sent_tokenize(text))
+  
+        cleaned_text = str(clean_text(text))
 
-        # Assuming cleaned_text is being used here
-        if not isinstance(cleaned_text, str):
-           cleaned_text = str(cleaned_text)
-        blob = TextBlob(cleaned_text)
+        
+
+        # Debug message to verify the data type of cleaned_text
+        print(f"Data type of cleaned_text: {type(cleaned_text)}")
+
+        
+
+        # # Debug message after converting to string
+        print("Cleaned text after converting to string:", cleaned_text)
+
+        # # Convert cleaned_text to UTF-8 string
+        
+
+        # # Create a TextBlob object
+        print(f"Type of 'text' variable: {type(text)}")
+
+      
+        blob = TextBlob(str(cleaned_text))
+
+
+        # # Perform sentiment analysisprint(f"Type of 'text' variable: {type(text)}")
+
         sentiment_score = blob.sentiment.polarity
+
+        
+
+
 
         # Word cloud generation
         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(cleaned_text)
 
-        # TextBlob sentiment analysis
+        #TextBlob sentiment analysis
+        # Perform sentiment analysis
+        sentiment_score = blob.sentiment.polarity
+
         textblob_sentiment_plot = generate_sentiment_plot(blob.sentences, 'TextBlob Sentiment Analysis')
 
 
@@ -291,9 +311,7 @@ def analyze_data():
                 pos_counts['Adverb'] += 1
             elif tag.startswith('JJ'):  # Adjective
                 pos_counts['Adjective'] += 1
-        # pos_counts = {}
-        # for _, tag in pos_tags:
-        #     pos_counts[tag] = pos_counts.get(tag, 0) + 1
+
 
         # Perform Named Entity Recognition (NER)
         ner_results = perform_ner(cleaned_text)
@@ -325,7 +343,7 @@ def analyze_data():
 
         # Replace placeholders with actual variables containing data
         cur.execute("INSERT INTO new_table (url, paragraph, num_words, num_sentences, sentiment_score,pos_tags) VALUES (%s, %s, %s, %s, %s,%s)",
-                    (url, str(text), num_words, num_sentences, sentiment_score,json.dumps(pos_counts)))
+                    (url, str(text), num_words, num_sentences,sentiment_score ,json.dumps(pos_counts)))
 
         # Commit the transaction
         conn.commit()
@@ -336,10 +354,10 @@ def analyze_data():
 
         # Render template with analysis results
         return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
-                               sentiment_score=sentiment_score,
+                              sentiment_score=sentiment_score,
                                paragraphs=text,
                                wordcloud_img=encoded_img_data,
-                               textblob_sentiment_plot=textblob_sentiment_plot,
+                              textblob_sentiment_plot=textblob_sentiment_plot,
                                polarity_plot=polarity_plot,
                                ner_results=ner_results,
                                keywords=keywords,
@@ -443,7 +461,7 @@ def github_logout():
 
 
 
-
-
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
+
+
