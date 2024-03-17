@@ -110,7 +110,7 @@ def generate_summary(text):
     words = tokenizer.tokenize(text.lower())
     stop_words = set(stopwords.words('english'))
     filtered_words = [word for word in words if word not in stop_words]
-    word_freq = Counter(filtered_words)
+    word_freq = Counter(filtered_words)  # Corrected variable name
     sentence_scores = {}
     for sentence in sentences:
         for word in nltk.word_tokenize(sentence.lower()):
@@ -126,6 +126,7 @@ def generate_summary(text):
         summary_sentences.append(sentence)
     summary = ' '.join(summary_sentences)
     return summary
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
