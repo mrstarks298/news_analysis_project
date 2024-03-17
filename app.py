@@ -32,18 +32,7 @@ nlp = nltk.download('maxent_ne_chunker')
 nltk.download('maxent_ne_chunker')
 
 
-# import spacy
 
-# # Load SpaCy English language model
-# nlp = spacy.load('en_core_web_sm')
-
-# # Function to perform Named Entity Recognition (NER) using SpaCy
-# def perform_ner(text):
-#     doc = nlp(text)
-#     entities = [(ent.text, ent.label_) for ent in doc.ents]
-#     # Remove duplicate entities
-#     unique_entities = list(set(entities))
-#     return unique_entities
 
 
 
@@ -83,18 +72,11 @@ github = oauth.register(
     authorize_url='https://github.com/login/oauth/authorize',
     authorize_params=None,
     api_base_url='https://api.github.com/',
-    client_kwargs={'scope': 'user:email'},
+    client_kwargs={'scope': 'user:email'}
 )
 
 
 
-# Download NLTK resources (run this only once)
-# nltk.download('punkt')
-# nltk.download('stopwords')
-
-
-
-# 
 
 
 # Function to check if admin is logged in
