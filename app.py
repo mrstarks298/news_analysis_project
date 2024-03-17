@@ -28,8 +28,9 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
     num_words INTEGER,
     num_sentences INTEGER,
     sentiment_score FLOAT,
-    pos_counts JSON
+    pos_counts JSONB
 );'''
+
 
 # Database configuration
 DB_HOST = 'dpg-cnr8jnmn7f5s738b3b50-a'
