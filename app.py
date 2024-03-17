@@ -32,9 +32,20 @@ create_table_query = '''CREATE TABLE IF NOT EXISTS new_table (
 
 # # Download spaCy model
 # nlp = spacy.load('en_core_web_sm')
-nlp = nltk.download('maxent_ne_chunker')
+# nlp = nltk.download('maxent_ne_chunker')
 
-nltk.download('maxent_ne_chunker')
+# nltk.download('maxent_ne_chunker')
+
+# Remove these lines:
+# nlp = nltk.download('maxent_ne_chunker')
+# nltk.download('maxent_ne_chunker')
+
+# Update the perform_ner function to use nltk.ne_chunk directly
+def perform_ner(text):
+    words = nltk.word_tokenize(text)
+    pos_tags = nltk.pos_tag(words)
+    return nltk.ne_chunk(pos_tags)
+
 
 
 # Database configuration
