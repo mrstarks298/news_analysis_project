@@ -300,8 +300,6 @@ def analyze_data():
 
         # Count POS tags
         pos_counts = {'Noun': 0, 'Pronoun': 0, 'Verb': 0, 'Adverb': 0, 'Adjective': 0}
-        print(pos_tags)
-        print(type(pos_tags))
         for _, tag in pos_tags:
             if tag.startswith('NN'):  # Noun
                 pos_counts['Noun'] += 1
@@ -465,4 +463,5 @@ def github_logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
