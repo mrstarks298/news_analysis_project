@@ -9,6 +9,6 @@ wordcloud== 1.9.3
 matplotlib==3.8.2
 seaborn== 0.13.2
 spacy==3.7.4
-en_core_web_md
+
 psycopg2-binary==2.9.9
 gunicorn==21.2.0
