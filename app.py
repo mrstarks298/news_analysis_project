@@ -350,9 +350,9 @@ def analyze_data():
         # Commit the transaction
         conn.commit()
 
-        # Close database connection
-        cur.close()
-        conn.close()
+        # # Close database connection
+        # cur.close()
+        # conn.close()
 
         # Render template with analysis results
         return render_template('results.html', pos_counts=pos_counts, num_words=num_words, num_sentences=num_sentences,
