@@ -367,13 +367,8 @@ def analyze_data():
                                summary=summary,
                                headings_text=headings_text
                                )
-
-    except requests.exceptions.RequestException as e:
-        return f"Error: Failed to fetch data from the provided URL. {e}"
-    except Exception as e:
-        return f"An error occurred while processing the data: {e}"
-
-
+    except:
+        print("sorry")
 
 # Route to display admin login form
 @app.route('/admin-login', methods=['GET', 'POST'])
